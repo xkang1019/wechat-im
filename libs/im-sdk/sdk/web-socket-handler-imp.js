@@ -28,7 +28,8 @@ export default class WebSocketHandlerImp extends IIMHandler {
 
     _sendMsgImp({content, success, fail}) {
         wx.sendSocketMessage({
-            data: JSON.stringify(content), success: () => {
+            data: JSON.stringify(content),
+            success: () => {
                 success && success(content);
             },
             fail: (res) => {
@@ -61,6 +62,7 @@ export default class WebSocketHandlerImp extends IIMHandler {
 
     _onSocketOpen() {
         wx.onSocketOpen((res) => {
+            console.info('_onSocketOpen',res)
             console.log('WebSocket连接已打开！');
         });
     }
@@ -75,17 +77,23 @@ export default class WebSocketHandlerImp extends IIMHandler {
     _onSocketMessage() {
         wx.onSocketMessage((res) => {
             let msg = JSON.parse(res.data);
-            if ('login' === msg.type) {
+            console.info('连接成功',msg);
+            if (10007 === msg.code) {
                 this._isLogin = true;
-                getApp().globalData.userInfo = msg.userInfo;
-                getApp().globalData.friendsId = msg.friendsId;
+                console.info('连接成功1213213',msg);
+
                 if (this._msgQueue.length) {
                     let temp;
                     while (temp = this._msgQueue.shift()) {
-                        this.sendMsg({content: {...temp, userId: msg.userInfo.userId}});
+                        //this.sendMsg({content: {...temp, userId: msg.userInfo.userId}});
                     }
                 }
-            } else {
+            }
+            if (res.command == 9){
+                getApp().globalData.userInfo = msg.user;
+               // getApp().globalData.friendsId = msg.friendsId;
+            }
+            else {
                 this._receiveListener && this._receiveListener(msg);
             }
         })

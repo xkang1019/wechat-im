@@ -12,7 +12,7 @@ export default class IMOperator {
     constructor(page, opts) {
         this._opts = opts;
         this._latestTImestamp = 0;//最新消息的时间戳
-        this._myHeadUrl = getApp().globalData.userInfo.myHeadUrl;
+        //this._myHeadUrl = getApp().globalData.userInfo.myHeadUrl;
         this._otherHeadUrl = this._opts.friendHeadUrl;
     }
 
@@ -24,7 +24,7 @@ export default class IMOperator {
         getApp().getIMHandler().sendMsg({
             content: {
                 type: 'get-history',
-                userId: getApp().globalData.userInfo.userId,
+                userId: getApp().globalData.userInfo.id,
                 friendId: this.getFriendId()
             }
         });
@@ -33,7 +33,7 @@ export default class IMOperator {
                 if (!msg) {
                     return;
                 }
-                msg.isMy = msg.msgUserId === getApp().globalData.userInfo.userId;
+                msg.isMy = msg.msgUserId === getApp().globalData.userInfo.id;
                 const item = this.createNormalChatItem(msg);
                 // const item = this.createNormalChatItem({type: 'voice', content: '上传文件返回的语音文件路径', isMy: false});
                 // const item = this.createNormalChatItem({type: 'image', content: '上传文件返回的图片文件路径', isMy: false});

@@ -4,6 +4,7 @@ import AppIMDelegate from "./delegate/app-im-delegate";
 App({
     globalData: {
         userInfo: {},
+        userId: ''
     },
     getIMHandler() {
         return this.appIMDelegate.getIMHandlerDelegate();

@@ -24,6 +24,7 @@ Page({
         delete item.latestMsg;
         delete item.unread;
         delete item.content;
+        console.info("toChat")
         wx.navigateTo({
             url: `../chat/chat?friend=${JSON.stringify(item)}`
         });
@@ -41,8 +42,9 @@ Page({
         });
         getApp().getIMHandler().sendMsg({
             content: {
-                type: 'get-conversations',
-                userId: getApp().globalData.userInfo.userId
+                cmd: 19,
+                type: 0,
+                userId: getApp().globalData.userId
             }, success: () => {
                 console.log('获取会话列表消息发送成功');
             },
