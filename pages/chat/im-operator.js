@@ -21,23 +21,36 @@ export default class IMOperator {
     }
 
     onSimulateReceiveMsg(cbOk) {
+
+        console.info('cbOk',cbOk)
         getApp().getIMHandler().sendMsg({
             content: {
-                type: 'get-history',
-                userId: getApp().globalData.userInfo.id,
-                friendId: this.getFriendId()
+                type: 1,
+                cmd: 19,
+                userId: getApp().globalData.userId,
+                fromUserId: this.getFriendId()
             }
         });
         getApp().getIMHandler().setOnReceiveMessageListener({
             listener: (msg) => {
+                console.info('历史消息',msg)
                 if (!msg) {
                     return;
                 }
                 msg.isMy = msg.msgUserId === getApp().globalData.userInfo.id;
-                const item = this.createNormalChatItem(msg);
+               // const item = this.createNormalChatItem(msg);
+                if (msg.command==12){
+                    return
+                }
+                if (msg.command==20){
+                    return
+                }
+                 const item = this.createNormalChatItem({type: 'text', content: msg.data.content, isMy: false});
+
+                console.info('item',item)
                 // const item = this.createNormalChatItem({type: 'voice', content: '上传文件返回的语音文件路径', isMy: false});
                 // const item = this.createNormalChatItem({type: 'image', content: '上传文件返回的图片文件路径', isMy: false});
-                this._latestTImestamp = item.timestamp;
+               // this._latestTImestamp = item.timestamp;
                 //这里是收到好友消息的回调函数，建议传入的item是 由 createNormalChatItem 方法生成的。
                 cbOk && cbOk(item);
             }
@@ -53,7 +66,7 @@ export default class IMOperator {
             success: (content) => {
                 //这个content格式一样,也是一个对象
                 const item = this.createNormalChatItem(content);
-                this._latestTImestamp = item.timestamp;
+               // this._latestTImestamp = item.timestamp;
                 success && success(item);
             },
             fail
@@ -62,21 +75,56 @@ export default class IMOperator {
 
     createChatItemContent({type = IMOperator.TextType, content = '', duration} = {}) {
         if (!content.replace(/^\s*|\s*$/g, '')) return;
-        return {
+       /* return {
             content,
             type,
             conversationId: 0,//会话id，目前未用到
-            userId: getApp().globalData.userInfo.userId,
+            userId: getApp().globalData.userId,
             friendId: this.getFriendId(),//好友id
+            duration
+        };*/
+
+        return{
+            type,
+            conversationId: 0,//会话id，目前未用到
+            from: getApp().globalData.userId,
+            to: this.getFriendId(),
+            cmd:11,
+            createTime:new Date().getTime(),
+            chatType:2,
+            msgType: 0,
+            content,
+            timestamp:Date.now(),
             duration
         };
     }
 
+
+
+
     createNormalChatItem({type = IMOperator.TextType, content = '', isMy = true, duration} = {}) {
-        if (!content) return;
+        console.info('content',content)
+        //if (!content) return;
         const currentTimestamp = Date.now();
         const time = dealChatTime(currentTimestamp, this._latestTImestamp);
         let obj = {
+            from: getApp().globalData.userId,
+            to: this.getFriendId(),
+            cmd:11,
+            createTime:currentTimestamp,
+            chatType:2,
+            msgType: 0,
+            content: content,
+            msgId: 0,
+            showTime: time.ifShowTime,//是否显示该次发送时间
+            isMy: isMy,//我发送的消息？
+           // headUrl: isMy ? this._myHeadUrl : this._otherHeadUrl,
+            sendStatus: 'success',
+            voiceDuration: duration,//语音时长 单位秒
+            isPlaying: false,//语音是否正在播放
+            type: 'text'
+        };
+        /*let obj = {
             msgId: 0,//消息id
             friendId: this.getFriendId(),//好友id
             isMy: isMy,//我发送的消息？
@@ -89,8 +137,8 @@ export default class IMOperator {
             sendStatus: 'success',//发送状态，目前有这几种状态：sending/success/failed | 发送中/发送成功/发送失败
             voiceDuration: duration,//语音时长 单位秒
             isPlaying: false,//语音是否正在播放
-        };
-        obj.saveKey = obj.friendId + '_' + obj.msgId;//saveKey是存储文件时的key
+        };*/
+        obj.saveKey = obj.to + '_' + obj.msgId;//saveKey是存储文件时的key
         return obj;
     }
 

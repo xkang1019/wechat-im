@@ -18,6 +18,7 @@ export default class TextManager {
      * @param type
      */
     sendOneMsg({content, type}) {
+       console.info('bbbbbbb')
         this._page.UI.showItemForMoment(this._page.imOperator.createNormalChatItem({
             type,
             content
@@ -30,6 +31,7 @@ export default class TextManager {
     }
 
     resend({type, content, duration, itemIndex}) {
+        console.info('ssda')
         this._page.sendMsg({
             content: this._page.imOperator.createChatItemContent({
                 type: type,

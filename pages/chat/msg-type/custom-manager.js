@@ -19,13 +19,15 @@ export default class CustomManager {
      * 发送消息时，通过UI类来管理发送状态的切换和消息的渲染
      */
     sendOneMsg() {
+        console.info('发送消息时，通过UI类来管理发送状态的切换和消息的渲染')
         const temp = IMOperator.createCustomChatItem();
         this._page.UI.showItemForMoment(temp, (itemIndex) => {
             this._page.sendMsg({
-                content: this._page.imOperator.createChatItemContent({
-                    type: IMOperator.CustomType,
-                    content: temp.content
-                }), itemIndex
+                content:this._page.imOperator.createChatItemContent({
+                                              type: IMOperator.CustomType,
+                                              content: temp.content
+                }),
+                itemIndex
             });
             this._page.UI.updateChatStatus('会话已关闭', false);
         });

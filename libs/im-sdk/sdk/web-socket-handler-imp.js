@@ -77,11 +77,9 @@ export default class WebSocketHandlerImp extends IIMHandler {
     _onSocketMessage() {
         wx.onSocketMessage((res) => {
             let msg = JSON.parse(res.data);
-            console.info('连接成功',msg);
+            msg.type = 'text'
             if (10007 === msg.code) {
                 this._isLogin = true;
-                console.info('连接成功1213213',msg);
-
                 if (this._msgQueue.length) {
                     let temp;
                     while (temp = this._msgQueue.shift()) {
@@ -93,7 +91,11 @@ export default class WebSocketHandlerImp extends IIMHandler {
                 getApp().globalData.userInfo = msg.user;
                // getApp().globalData.friendsId = msg.friendsId;
             }
+
+
+
             else {
+
                 this._receiveListener && this._receiveListener(msg);
             }
         })

@@ -36,6 +36,7 @@ Page({
         this.msgManager = new MsgManager(this);
 
         this.imOperator.onSimulateReceiveMsg((msg) => {
+            console.info('msg',msg)
             this.msgManager.showMsg({msg})
         });
         this.UI.updateChatStatus('正在聊天中...');
@@ -76,12 +77,14 @@ Page({
         that.voiceButton();
     },
     textButton() {
+        console.info("textButton")
         chatInput.setTextMessageListener((e) => {
             let content = e.detail.value;
             this.msgManager.sendMsg({type: IMOperator.TextType, content});
         });
     },
     voiceButton() {
+        console.info("voiceButton")
         chatInput.recordVoiceListener((res, duration) => {
             let tempFilePath = res.tempFilePath;
             this.msgManager.sendMsg({type: IMOperator.VoiceType, content: tempFilePath, duration});
@@ -99,6 +102,7 @@ Page({
         }, 1000);
     },
     extraButton() {
+        console.info("extraButton")
         let that = this;
         chatInput.clickExtraListener((e) => {
             let chooseIndex = parseInt(e.currentTarget.dataset.index);

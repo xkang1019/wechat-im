@@ -59,6 +59,9 @@ Page({
             var users = group.users;
             for (var u = 0; u < users.length; u++) {
                 var user = users[u];
+              if (getApp().globalData.userId == user.id){
+                user.nick = '我';
+              }
                 groupsList.push(self.createFriendItem(user))
             }
         }
