@@ -12,7 +12,7 @@ export default class AppIMDelegate {
     onShow(options) {
      var userName = new Date().getTime();
       this._app.globalData.userId = userName;
-      this.iIMHandler.createConnection({ options: { url: 'ws://47.107.162.97:8888?username=' + userName +'&password=123'}});
+      this.iIMHandler.createConnection({ options: { url: 'ws://192.168.0.103:8888?username=' + userName +'&password=123'}});
     }
 
     onHide() {

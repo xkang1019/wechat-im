@@ -21,14 +21,12 @@ export default class IMOperator {
     }
 
     onSimulateReceiveMsg(cbOk) {
-
-        console.info('cbOk',cbOk)
         getApp().getIMHandler().sendMsg({
             content: {
-                type: 1,
-                cmd: 19,
-                userId: getApp().globalData.userId,
-                fromUserId: this.getFriendId()
+              type: 1,
+              cmd: 19,
+              userId: getApp().globalData.userId,
+              fromUserId: this.getFriendId()
             }
         });
         getApp().getIMHandler().setOnReceiveMessageListener({
@@ -37,15 +35,19 @@ export default class IMOperator {
                 if (!msg) {
                     return;
                 }
+              var item; 
                 msg.isMy = msg.msgUserId === getApp().globalData.userInfo.id;
                // const item = this.createNormalChatItem(msg);
+              if (msg.command == 11) {
+                 item = this.createNormalChatItem({ type: 'text', content: msg.data.content, isMy: false });
+              }
                 if (msg.command==12){
                     return
                 }
-                if (msg.command==20){
-                    return
-                }
-                 const item = this.createNormalChatItem({type: 'text', content: msg.data.content, isMy: false});
+                 if (msg.command==20){
+                   item = this.createNormalChatItem({ type: 'text', content: msg.data, isMy: false });
+               }
+                 
 
                 console.info('item',item)
                 // const item = this.createNormalChatItem({type: 'voice', content: '上传文件返回的语音文件路径', isMy: false});

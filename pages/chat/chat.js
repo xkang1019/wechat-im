@@ -37,6 +37,7 @@ Page({
 
         this.imOperator.onSimulateReceiveMsg((msg) => {
             console.info('msg',msg)
+          console.info('1111111111')
             this.msgManager.showMsg({msg})
         });
         this.UI.updateChatStatus('正在聊天中...');
